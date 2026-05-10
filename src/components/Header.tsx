@@ -18,7 +18,7 @@ export default function Header() {
         <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                 <a href="#home" className="flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full  text-white">
                         <img
                             src={tireBanner}
                             alt="Putnam Tire Auto and Repair shop banner"
