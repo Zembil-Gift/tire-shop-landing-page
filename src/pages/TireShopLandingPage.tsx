@@ -1,27 +1,26 @@
-import Header from "../components/Header";
 import Home from "../components/Home";
 import Services from "../components/Services";
 import About from "../components/About";
 import Booking from "../components/Booking";
 import Reviews from "../components/Reviews";
 import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+import FeatureExplainer from "../components/FeatureExplainer";
 
 export default function TireShopLandingPage() {
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900">
-            <Header />
-
-            <main>
-                <Home />
-                <Services />
-                <About />
-                <Booking />
-                <Reviews />
-                <Contact />
-            </main>
-
-            <Footer />
+        <div className="bg-slate-50 text-slate-900">
+            <Home />
+            <Services />
+            <section className="py-20">
+                <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:px-8">
+                    <FeatureExplainer feature="quote" />
+                    <FeatureExplainer feature="track-status" />
+                </div>
+            </section>
+            <Booking />
+            <Reviews />
+            <About />
+            <Contact />
         </div>
     );
 }

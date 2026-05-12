@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 import { business } from "../data/siteData";
 import tireBanner from "../assets/tire-logo.png";
 
@@ -7,17 +8,18 @@ export default function Header() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const links = [
-        { label: "Home", href: "#home" },
-        { label: "Services", href: "#services" },
-        { label: "About", href: "#about" },
-        { label: "Reviews", href: "#reviews" },
-        { label: "Contact", href: "#contact" },
+        { label: "Home", href: "/" },
+        { label: "Services", href: "/services" },
+        { label: "Get Quote", href: "/get-quote" },
+        { label: "Track Status", href: "/track-status" },
+        { label: "About", href: "/about" },
+        { label: "Contact", href: "/contact" },
     ];
 
     return (
-        <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
+        <header className="sticky top-0 z-50 bg-neutral-950/95 text-white shadow-sm backdrop-blur">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                <a href="#home" className="flex items-center gap-2">
+                <Link to="/" className="flex items-center gap-2">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full  text-white">
                         <img
                             src={tireBanner}
@@ -26,20 +28,22 @@ export default function Header() {
                         />
                     </div>
 
-                    <span className="text-xl font-bold tracking-tight">
+                    <span className="text-xl font-bold tracking-tight text-white">
             {business.name}
           </span>
-                </a>
+                </Link>
 
                 <nav className="hidden items-center gap-8 md:flex">
                     {links.map((link) => (
-                        <a
+                        <NavLink
                             key={link.href}
-                            href={link.href}
-                            className="text-sm font-medium hover:text-red-600"
+                            to={link.href}
+                            className={({ isActive }) =>
+                                `text-sm font-medium transition hover:text-red-500 ${isActive ? "text-red-500" : "text-slate-200"}`
+                            }
                         >
                             {link.label}
-                        </a>
+                        </NavLink>
                     ))}
                 </nav>
 
@@ -53,7 +57,7 @@ export default function Header() {
 
                 <button
                     type="button"
-                    className="rounded-lg p-2 md:hidden"
+                    className="rounded-lg p-2 text-slate-100 md:hidden"
                     onClick={() => setMobileOpen((prev) => !prev)}
                     aria-label="Toggle navigation menu"
                 >
@@ -62,16 +66,17 @@ export default function Header() {
             </div>
 
             {mobileOpen && (
-                <div className="border-t bg-white px-4 py-4 md:hidden">
+                <div className="border-t border-neutral-800 bg-neutral-950 px-4 py-4 md:hidden">
                     <nav className="flex flex-col gap-4">
                         {links.map((link) => (
-                            <a
+                            <NavLink
                                 key={link.href}
-                                href={link.href}
+                                to={link.href}
                                 onClick={() => setMobileOpen(false)}
+                                className="text-slate-100 hover:text-red-500"
                             >
                                 {link.label}
-                            </a>
+                            </NavLink>
                         ))}
 
                         <a

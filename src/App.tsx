@@ -1,8 +1,7 @@
-import TireShopLandingPage from "./pages/TireShopLandingPage";
-
+import { AppRouter } from "./routes/AppRouter";
 
 function App() {
-  return <TireShopLandingPage />;
+    return <AppRouter />;
 }
 
-export default App
+export default App;

@@ -41,7 +41,7 @@ export default function About() {
                     </p>
                 </div>
 
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-5">
                     {features.map((feature) => (
                         <div
                             key={feature.title}

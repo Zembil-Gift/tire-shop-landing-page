@@ -28,6 +28,23 @@ export default function Contact() {
                             {business.hours}
                         </p>
                     </div>
+
+                    <div className="mt-6 flex flex-wrap items-center gap-4">
+                        <a
+                            href="tel:+16013661886"
+                            className="rounded-full bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-700"
+                        >
+                            Call Now
+                        </a>
+                        <a
+                            href={business.googleBusinessProfile}
+                            className="font-semibold text-red-600 hover:text-red-700"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            View Google Business Profile
+                        </a>
+                    </div>
                 </div>
 
                 <div className="overflow-hidden rounded-3xl bg-slate-200 shadow-sm ring-1 ring-slate-200">

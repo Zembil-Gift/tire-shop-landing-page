@@ -1,54 +1,42 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
-import { appointmentServiceOptions } from "../data/siteData";
-import { submitAppointment } from "../services/appointmentService";
+import { tireTypeOptions } from "../data/siteData";
+import { submitQuote } from "../services/quoteService";
+import type { PreferredTireType } from "../types/quote.types";
 
-type BookingFormState = {
+type QuoteFormState = {
     fullName: string;
     phone: string;
     email: string;
+    vehicleYear: string;
     vehicleMake: string;
     vehicleModel: string;
-    serviceType: string;
-    preferredDate: string;
-    preferredTime: string;
-    notes: string;
+    tireSize: string;
+    quantity: string;
+    preferredTireType: PreferredTireType | "";
+    message: string;
 };
 
-const initialState: BookingFormState = {
+const initialState: QuoteFormState = {
     fullName: "",
     phone: "",
     email: "",
+    vehicleYear: "",
     vehicleMake: "",
     vehicleModel: "",
-    serviceType: "",
-    preferredDate: "",
-    preferredTime: "",
-    notes: "",
+    tireSize: "",
+    quantity: "",
+    preferredTireType: "",
+    message: "",
 };
 
-export default function Booking() {
-    const [form, setForm] = useState<BookingFormState>(initialState);
+export default function Quote() {
+    const [form, setForm] = useState<QuoteFormState>(initialState);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const vehicleDetails = useMemo(
-        () => `${form.vehicleMake} ${form.vehicleModel}`.trim(),
-        [form.vehicleMake, form.vehicleModel],
-    );
-
-    const isInvalid =
-        !form.fullName.trim() ||
-        !form.phone.trim() ||
-        !form.email.trim() ||
-        !form.vehicleMake.trim() ||
-        !form.vehicleModel.trim() ||
-        !form.serviceType.trim() ||
-        !form.preferredDate ||
-        !form.preferredTime;
-
-    function updateField<K extends keyof BookingFormState>(field: K, value: BookingFormState[K]) {
+    function updateField<K extends keyof QuoteFormState>(field: K, value: QuoteFormState[K]) {
         setForm((prev) => ({ ...prev, [field]: value }));
     }
 
@@ -60,15 +48,14 @@ export default function Booking() {
         return phone.replace(/\D/g, "").length >= 10;
     }
 
+    function isPreferredTireType(value: string): value is PreferredTireType {
+        return tireTypeOptions.some((option) => option.value === value);
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setMessage(null);
         setError(null);
-
-        if (isInvalid) {
-            setError("Please complete all required fields.");
-            return;
-        }
 
         if (!isEmailValid(form.email)) {
             setError("Please enter a valid email address.");
@@ -80,50 +67,46 @@ export default function Booking() {
             return;
         }
 
+        if (!form.preferredTireType) {
+            setError("Please select a tire type.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
-            await submitAppointment({
+            await submitQuote({
                 fullName: form.fullName.trim(),
                 phone: form.phone.trim(),
                 email: form.email.trim(),
-                serviceType: form.serviceType,
-                preferredDate: form.preferredDate,
-                preferredTime: form.preferredTime,
-                vehicleDetails,
-                notes: form.notes.trim() || undefined,
+                vehicleYear: Number(form.vehicleYear),
+                vehicleMake: form.vehicleMake.trim(),
+                vehicleModel: form.vehicleModel.trim(),
+                tireSize: form.tireSize.trim(),
+                quantity: Number(form.quantity),
+                preferredTireType: form.preferredTireType,
+                message: form.message.trim() || undefined,
             });
-            setMessage("Appointment request submitted. We will contact you shortly.");
+            setMessage("Your quote request was submitted successfully.");
             setForm(initialState);
             if (typeof window !== "undefined" && typeof window.gtag === "function") {
-                window.gtag("event", "conversion", { send_to: "AW-CONFIG/APPOINTMENT_SUBMIT" });
+                window.gtag("event", "conversion", { send_to: "AW-CONFIG/QUOTE_SUBMIT" });
             }
         } catch {
-            setError("We could not submit your appointment. Please try again.");
+            setError("We could not submit your quote. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
     }
 
     return (
-        <section id="booking" className="py-20">
-            <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-                <div>
-                    <p className="font-semibold text-red-600">Book Service</p>
-
-                    <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                        Request an appointment
-                    </h2>
-
-                    <p className="mt-5 text-slate-600">
-                        Fill out the form and our team will contact you to confirm your
-                        appointment.
-                    </p>
+        <section id="quote" className="bg-white py-20">
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+                <div className="text-center">
+                    <p className="font-semibold text-red-600">Get Tire Quote</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Request a tire quote</h2>
                 </div>
 
-                <form
-                    className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
-                    onSubmit={handleSubmit}
-                >
+                <form className="mt-10 rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200" onSubmit={handleSubmit}>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <input
                             value={form.fullName}
@@ -132,7 +115,6 @@ export default function Booking() {
                             placeholder="Full name"
                             required
                         />
-
                         <input
                             value={form.phone}
                             onChange={(event) => updateField("phone", event.target.value)}
@@ -140,7 +122,6 @@ export default function Booking() {
                             placeholder="Phone number"
                             required
                         />
-
                         <input
                             type="email"
                             value={form.email}
@@ -149,7 +130,14 @@ export default function Booking() {
                             placeholder="Email address"
                             required
                         />
-
+                        <input
+                            type="number"
+                            value={form.vehicleYear}
+                            onChange={(event) => updateField("vehicleYear", event.target.value)}
+                            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
+                            placeholder="Vehicle year"
+                            required
+                        />
                         <input
                             value={form.vehicleMake}
                             onChange={(event) => updateField("vehicleMake", event.target.value)}
@@ -157,7 +145,6 @@ export default function Booking() {
                             placeholder="Vehicle make"
                             required
                         />
-
                         <input
                             value={form.vehicleModel}
                             onChange={(event) => updateField("vehicleModel", event.target.value)}
@@ -165,45 +152,47 @@ export default function Booking() {
                             placeholder="Vehicle model"
                             required
                         />
-
-                        <select
-                            value={form.serviceType}
-                            onChange={(event) => updateField("serviceType", event.target.value)}
+                        <input
+                            value={form.tireSize}
+                            onChange={(event) => updateField("tireSize", event.target.value)}
                             className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
+                            placeholder="Tire size"
+                            required
+                        />
+                        <input
+                            type="number"
+                            min={1}
+                            value={form.quantity}
+                            onChange={(event) => updateField("quantity", event.target.value)}
+                            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
+                            placeholder="Quantity needed"
+                            required
+                        />
+                        <select
+                            value={form.preferredTireType}
+                            onChange={(event) => {
+                                const value = event.target.value;
+                                updateField("preferredTireType", isPreferredTireType(value) ? value : "");
+                            }}
+                            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600 sm:col-span-2"
                             required
                         >
                             <option value="" disabled>
-                                Service needed
+                                Preferred tire type
                             </option>
-                            {appointmentServiceOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
+                            {tireTypeOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
                                 </option>
                             ))}
                         </select>
-
-                        <input
-                            type="date"
-                            value={form.preferredDate}
-                            onChange={(event) => updateField("preferredDate", event.target.value)}
-                            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
-                            required
-                        />
-
-                        <input
-                            type="time"
-                            value={form.preferredTime}
-                            onChange={(event) => updateField("preferredTime", event.target.value)}
-                            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
-                            required
-                        />
                     </div>
 
                     <textarea
-                        value={form.notes}
-                        onChange={(event) => updateField("notes", event.target.value)}
+                        value={form.message}
+                        onChange={(event) => updateField("message", event.target.value)}
                         className="mt-4 min-h-28 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
-                        placeholder="Additional notes"
+                        placeholder="Additional message"
                     />
 
                     {message && <p className="mt-4 text-sm font-medium text-emerald-700">{message}</p>}
@@ -212,9 +201,9 @@ export default function Booking() {
                     <button
                         type="submit"
                         className="mt-4 w-full rounded-full bg-red-600 px-6 py-4 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-400"
-                        disabled={isSubmitting || isInvalid}
+                        disabled={isSubmitting}
                     >
-                        {isSubmitting ? "Submitting..." : "Request Appointment"}
+                        {isSubmitting ? "Submitting..." : "Submit Quote Request"}
                     </button>
                 </form>
             </div>

@@ -5,6 +5,34 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tireshope</title>
+    <script>
+      (function initializeAnalytics() {
+        var gaTrackingId = "%VITE_GA_TRACKING_ID%";
+        var adsId = "%VITE_GOOGLE_ADS_ID%";
+        var hasGaId = gaTrackingId && gaTrackingId[0] !== "%";
+        var hasAdsId = adsId && adsId[0] !== "%";
+        if (!hasGaId && !hasAdsId) return;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag("js", new Date());
+
+        var tagId = hasGaId ? gaTrackingId : adsId;
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(tagId);
+        document.head.appendChild(script);
+
+        if (hasGaId) {
+          window.gtag("config", gaTrackingId);
+        }
+        if (hasAdsId) {
+          window.gtag("config", adsId);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,4 +1,5 @@
 import { CalendarDays, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 import { business } from "../data/siteData";
 import tireBanner from "../assets/tire-banner.png";
 
@@ -40,13 +41,13 @@ export default function Home() {
                             Call Now
                         </a>
 
-                        <a
-                            href="#booking"
+                        <Link
+                            to="/schedule"
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-slate-950 shadow-lg hover:bg-slate-100"
                         >
                             <CalendarDays size={20} />
-                            Book Appointment
-                        </a>
+                            Schedule Appointment
+                        </Link>
                     </div>
                 </div>
             </div>
