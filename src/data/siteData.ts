@@ -1,5 +1,5 @@
 export const business = {
-    name: "Putnam Tire & Auto Repair",
+    name: "Putnam Tire",
     phone: "(601) 366-1886",
     displayPhone: "(601) 366-1886",
     address: "4879 N State St, Jackson, MS 39206",

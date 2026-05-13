@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminShell from "./AdminShell";
 import { getAdminQuotes } from "../../services/quoteService";
 import type { AdminQuote } from "../../types/quote.types";
+import { formatDateTimeForDisplay } from "../../utils/dateTime";
 
 export default function AdminQuotesPage() {
     const [quotes, setQuotes] = useState<AdminQuote[]>([]);
@@ -30,6 +31,7 @@ export default function AdminQuotesPage() {
                             <th className="px-2 py-2">ID</th>
                             <th className="px-2 py-2">Customer</th>
                             <th className="px-2 py-2">Phone</th>
+                            <th className="px-2 py-2">Email</th>
                             <th className="px-2 py-2">Vehicle</th>
                             <th className="px-2 py-2">Tire Size</th>
                             <th className="px-2 py-2">Qty</th>
@@ -44,17 +46,18 @@ export default function AdminQuotesPage() {
                                 <td className="px-2 py-2">{quote.id}</td>
                                 <td className="px-2 py-2">{quote.customerName}</td>
                                 <td className="px-2 py-2">{quote.phone}</td>
+                                <td className="px-2 py-2">{quote.email ?? "-"}</td>
                                 <td className="px-2 py-2">{quote.vehicle}</td>
                                 <td className="px-2 py-2">{quote.tireSize}</td>
                                 <td className="px-2 py-2">{quote.quantity}</td>
                                 <td className="px-2 py-2">{quote.preferredTireType}</td>
                                 <td className="px-2 py-2">{quote.status}</td>
-                                <td className="px-2 py-2">{quote.submittedAt}</td>
+                                <td className="px-2 py-2">{formatDateTimeForDisplay(quote.submittedAt)}</td>
                             </tr>
                         ))}
                         {!quotes.length && (
                             <tr>
-                                <td className="px-2 py-4 text-slate-500" colSpan={9}>
+                                <td className="px-2 py-4 text-slate-500" colSpan={10}>
                                     No quotes available.
                                 </td>
                             </tr>

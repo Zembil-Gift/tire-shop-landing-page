@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminShell from "./AdminShell";
 import { getAdminAppointments } from "../../services/appointmentService";
 import type { AdminAppointment } from "../../types/appointment.types";
+import { formatDateForDisplay, formatDateTimeForDisplay, formatTimeForDisplay } from "../../utils/dateTime";
 
 export default function AdminAppointmentsPage() {
     const [appointments, setAppointments] = useState<AdminAppointment[]>([]);
@@ -30,6 +31,7 @@ export default function AdminAppointmentsPage() {
                             <th className="px-2 py-2">ID</th>
                             <th className="px-2 py-2">Customer</th>
                             <th className="px-2 py-2">Phone</th>
+                            <th className="px-2 py-2">Email</th>
                             <th className="px-2 py-2">Service Type</th>
                             <th className="px-2 py-2">Date</th>
                             <th className="px-2 py-2">Time</th>
@@ -44,17 +46,18 @@ export default function AdminAppointmentsPage() {
                                 <td className="px-2 py-2">{appointment.id}</td>
                                 <td className="px-2 py-2">{appointment.customerName}</td>
                                 <td className="px-2 py-2">{appointment.phone}</td>
+                                <td className="px-2 py-2">{appointment.email ?? "-"}</td>
                                 <td className="px-2 py-2">{appointment.serviceType}</td>
-                                <td className="px-2 py-2">{appointment.date}</td>
-                                <td className="px-2 py-2">{appointment.time}</td>
+                                <td className="px-2 py-2">{formatDateForDisplay(appointment.date)}</td>
+                                <td className="px-2 py-2">{formatTimeForDisplay(appointment.time)}</td>
                                 <td className="px-2 py-2">{appointment.vehicle}</td>
                                 <td className="px-2 py-2">{appointment.status}</td>
-                                <td className="px-2 py-2">{appointment.submittedAt}</td>
+                                <td className="px-2 py-2">{formatDateTimeForDisplay(appointment.submittedAt)}</td>
                             </tr>
                         ))}
                         {!appointments.length && (
                             <tr>
-                                <td className="px-2 py-4 text-slate-500" colSpan={9}>
+                                <td className="px-2 py-4 text-slate-500" colSpan={10}>
                                     No appointments available.
                                 </td>
                             </tr>

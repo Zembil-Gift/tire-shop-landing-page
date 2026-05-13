@@ -24,7 +24,7 @@ export default function Home() {
                     </p>
 
                     <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl">
-                        Putnam Tire Auto & Repair
+                        Putnam Tire 
                     </h1>
 
                     <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-slate-100 sm:text-xl">

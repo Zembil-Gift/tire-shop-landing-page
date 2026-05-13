@@ -15,14 +15,14 @@ const featureContent: Record<
         title: "Get Tire Quote",
         description:
             "Share your vehicle and tire needs, and our team will send you pricing options for budget, mid-range, or premium tires.",
-        buttonLabel: "Go to Get Quote",
+        buttonLabel: "Get Free Quote",
         to: "/get-quote",
     },
     "track-status": {
         title: "Track Work Status",
         description:
             "Check your current work order updates anytime using your phone number or work order number, including estimated completion and shop notes.",
-        buttonLabel: "Go to Track Status",
+        buttonLabel: "Track Your Service",
         to: "/track-status",
     },
 };

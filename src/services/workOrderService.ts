@@ -6,7 +6,7 @@ import type {
     WorkOrderStatus,
 } from "../types/workOrder.types";
 
-export async function checkStatus(params: { phone?: string; workOrderNumber?: string }): Promise<WorkOrderStatus> {
+export async function checkStatus(params: { phone?: string; email?: string }): Promise<WorkOrderStatus> {
     const response = await api.get<WorkOrderStatus>("/api/work-orders/status", { params });
     return response.data;
 }

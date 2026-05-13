@@ -19,7 +19,7 @@ export default function AdminShell({ title, children }: AdminShellProps) {
     return (
         <div className="min-h-screen bg-slate-100">
             <header className="bg-neutral-950 px-4 py-4 text-white sm:px-6 lg:px-8">
-                <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
+                <div className="mx-auto flex w-full max-w-[96rem] flex-wrap items-center justify-between gap-3">
                     <h1 className="text-lg font-bold">Putnam Tire Admin</h1>
                     <button
                         type="button"
@@ -35,7 +35,7 @@ export default function AdminShell({ title, children }: AdminShellProps) {
                 </div>
             </header>
 
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-[96rem] px-4 py-6 sm:px-6 lg:px-8">
                 <nav className="mb-6 flex flex-wrap gap-2">
                     {links.map((link) => (
                         <Link

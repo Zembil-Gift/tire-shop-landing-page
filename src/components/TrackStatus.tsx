@@ -3,8 +3,9 @@ import type { FormEvent } from "react";
 import StatusBadge from "./StatusBadge";
 import { checkStatus } from "../services/workOrderService";
 import type { WorkOrderStatus } from "../types/workOrder.types";
+import { formatDateTimeForDisplay } from "../utils/dateTime";
 
-type SearchMode = "phone" | "workOrderNumber";
+type SearchMode = "phone" | "email";
 
 export default function TrackStatus() {
     const [mode, setMode] = useState<SearchMode>("phone");
@@ -22,7 +23,7 @@ export default function TrackStatus() {
         setStatusResult(null);
 
         try {
-            const payload = mode === "phone" ? { phone: value } : { workOrderNumber: value };
+            const payload = mode === "phone" ? { phone: value } : { email: value };
             const result = await checkStatus(payload);
             if (!result) {
                 setNotFound(true);
@@ -55,10 +56,10 @@ export default function TrackStatus() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => setMode("workOrderNumber")}
-                            className={`rounded-full px-4 py-2 text-sm font-semibold ${mode === "workOrderNumber" ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}
+                            onClick={() => setMode("email")}
+                            className={`rounded-full px-4 py-2 text-sm font-semibold ${mode === "email" ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}
                         >
-                            Search by Work Order Number
+                            Search by Email
                         </button>
                     </div>
 
@@ -67,7 +68,7 @@ export default function TrackStatus() {
                             value={value}
                             onChange={(event) => setValue(event.target.value)}
                             className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-600"
-                            placeholder={mode === "phone" ? "Enter phone number" : "Enter work order number"}
+                            placeholder={mode === "phone" ? "Enter phone number" : "Enter email address"}
                             required
                         />
                         <button
@@ -95,7 +96,7 @@ export default function TrackStatus() {
                             </p>
                             <p>
                                 <span className="font-semibold">Estimated Completion:</span>{" "}
-                                {statusResult.estimatedCompletionTime ?? "Not available"}
+                                {formatDateTimeForDisplay(statusResult.estimatedCompletionTime, "Not available")}
                             </p>
                             <p className="sm:col-span-2">
                                 <span className="font-semibold">Staff Note:</span> {statusResult.staffNote ?? "No notes yet"}
