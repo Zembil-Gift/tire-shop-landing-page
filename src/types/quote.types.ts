@@ -29,4 +29,7 @@ export type AdminQuote = {
     status: string;
     submittedAt: string;
     createdAt?: string;
+    quotedPrice?: number | null;
+    quoteReason?: string | null;
+    quotedAt?: string | null;
 };

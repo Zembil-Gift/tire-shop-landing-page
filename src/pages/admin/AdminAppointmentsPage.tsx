@@ -41,9 +41,9 @@ export default function AdminAppointmentsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {appointments.map((appointment) => (
+                        {appointments.map((appointment, index) => (
                             <tr key={String(appointment.id)} className="border-b">
-                                <td className="px-2 py-2">{appointment.id}</td>
+                                <td className="px-2 py-2">{index + 1}</td>
                                 <td className="px-2 py-2">{appointment.customerName}</td>
                                 <td className="px-2 py-2">{appointment.phone}</td>
                                 <td className="px-2 py-2">{appointment.email ?? "-"}</td>

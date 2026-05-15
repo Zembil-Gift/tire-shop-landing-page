@@ -20,3 +20,14 @@ export async function getAdminQuotes(): Promise<AdminQuote[]> {
         };
     });
 }
+
+export async function sendQuote(
+    id: number | string,
+    quotedPrice: number,
+    reason: string
+): Promise<void> {
+    await api.put(`/api/admin/quotes/${id}/offer`, {
+        quotedPrice,
+        reason,
+    });
+}

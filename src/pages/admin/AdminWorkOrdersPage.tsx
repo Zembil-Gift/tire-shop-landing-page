@@ -3,7 +3,7 @@ import type { FormEvent } from "react";
 import AdminShell from "./AdminShell";
 import { createAdminWorkOrder, getAllWorkOrders, updateStatus } from "../../services/workOrderService";
 import type { WorkOrder } from "../../types/workOrder.types";
-import { getAdminAppointments } from "../../services/appointmentService";
+import { getAppointmentsWithoutWorkOrder } from "../../services/appointmentService";
 import type { AdminAppointment } from "../../types/appointment.types";
 import { formatDateTimeForDisplay } from "../../utils/dateTime";
 
@@ -71,6 +71,7 @@ export default function AdminWorkOrdersPage() {
     const [createError, setCreateError] = useState<string | null>(null);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
+    const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
     const [isUpdatingById, setIsUpdatingById] = useState<Record<number, boolean>>({});
     const [editState, setEditState] = useState<WorkOrderEditState | null>(null);
     const [createForm, setCreateForm] = useState<CreateOrderFormState>(INITIAL_CREATE_ORDER_FORM);
@@ -78,7 +79,10 @@ export default function AdminWorkOrdersPage() {
     useEffect(() => {
         async function loadPageData() {
             try {
-                const [workOrderData, appointmentData] = await Promise.all([getAllWorkOrders(), getAdminAppointments()]);
+                const [workOrderData, appointmentData] = await Promise.all([
+                    getAllWorkOrders(),
+                    getAppointmentsWithoutWorkOrder(),
+                ]);
                 setWorkOrders(workOrderData);
                 setAppointments(appointmentData);
             } catch {
@@ -93,6 +97,26 @@ export default function AdminWorkOrdersPage() {
         () => Array.from(new Set([...DEFAULT_STATUS_OPTIONS, ...workOrders.map((order) => order.status)])),
         [workOrders],
     );
+
+    async function handleToggleCreateForm() {
+        if (isCreateOpen) {
+            setIsCreateOpen(false);
+            setCreateError(null);
+            return;
+        }
+
+        setIsLoadingAppointments(true);
+        setCreateError(null);
+        try {
+            const appointmentData = await getAppointmentsWithoutWorkOrder();
+            setAppointments(appointmentData);
+            setIsCreateOpen(true);
+        } catch {
+            setCreateError("Failed to load available appointments.");
+        } finally {
+            setIsLoadingAppointments(false);
+        }
+    }
 
     function applyAppointmentSelection(appointmentId: string) {
         if (!appointmentId) {
@@ -192,13 +216,15 @@ export default function AdminWorkOrdersPage() {
                     <h3 className="text-lg font-semibold text-slate-900">Create Work Order</h3>
                     <button
                         type="button"
-                        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
-                        onClick={() => {
-                            setCreateError(null);
-                            setIsCreateOpen((previous) => !previous);
-                        }}
+                        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                        onClick={() => void handleToggleCreateForm()}
+                        disabled={isLoadingAppointments}
                     >
-                        {isCreateOpen ? "Close" : "Create Order"}
+                        {isLoadingAppointments
+                            ? "Loading..."
+                            : isCreateOpen
+                              ? "Close"
+                              : "Create Order"}
                     </button>
                 </div>
 
@@ -285,6 +311,7 @@ export default function AdminWorkOrdersPage() {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b text-left text-slate-600">
+                            <th className="px-3 py-2 whitespace-nowrap">No</th>
                             <th className="px-3 py-2 whitespace-nowrap">Work Order #</th>
                             <th className="px-3 py-2 whitespace-nowrap">Customer</th>
                             <th className="px-3 py-2 whitespace-nowrap">Phone</th>
@@ -298,8 +325,9 @@ export default function AdminWorkOrdersPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {workOrders.map((order) => (
+                        {workOrders.map((order, index) => (
                             <tr key={order.id} className="border-b">
+                                <td className="px-3 py-2 whitespace-nowrap">{index + 1}</td>
                                 <td className="px-3 py-2 whitespace-nowrap">{order.workOrderNumber}</td>
                                 <td className="px-3 py-2 whitespace-nowrap">{order.customerName}</td>
                                 <td className="px-3 py-2 whitespace-nowrap">{order.phone}</td>
