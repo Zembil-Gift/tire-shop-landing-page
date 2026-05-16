@@ -9,40 +9,31 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18162981443">
     </script>
+
+    <!-- Event snippet for Get directions conversion page
+In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+    <script>
+      function gtag_report_conversion(url) {
+        var callback = function () {
+          if (typeof(url) != 'undefined') {
+            window.location = url;
+          }
+        };
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18162981443/4tLxCL6gsq0cEMO05NRD',
+          'event_callback': callback
+        });
+        return false;
+      }
+    </script>
+
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
       gtag('config', 'AW-18162981443');
-    </script>
-    <script>
-      (function initializeAnalytics() {
-        var gaTrackingId = "%VITE_GA_TRACKING_ID%";
-        var adsId = "%VITE_GOOGLE_ADS_ID%";
-        var hasGaId = gaTrackingId && gaTrackingId[0] !== "%";
-        var hasAdsId = adsId && adsId[0] !== "%";
-        if (!hasGaId && !hasAdsId) return;
-
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function () {
-          window.dataLayer.push(arguments);
-        };
-        window.gtag("js", new Date());
-
-        var tagId = hasGaId ? gaTrackingId : adsId;
-        var script = document.createElement("script");
-        script.async = true;
-        script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(tagId);
-        document.head.appendChild(script);
-
-        if (hasGaId) {
-          window.gtag("config", gaTrackingId);
-        }
-        if (hasAdsId) {
-          window.gtag("config", adsId);
-        }
-      })();
     </script>
   </head>
   <body>
